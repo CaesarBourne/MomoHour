@@ -5,24 +5,39 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { QueryState } from '@/components/ui/QueryState';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Card } from '@/components/ui/Card';
-import { Input } from '@/components/ui/Input';
+import { Input, Select } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { RewardsTable } from '@/components/rewards/RewardsTable';
 import { useRewards } from '@/lib/queries';
+import type { ListRewardsInput } from '@/lib/types';
+
+const EMPTY_FILTERS: ListRewardsInput = {};
 
 export default function RewardsPage() {
-  const [msisdnInput, setMsisdnInput] = useState('');
-  const [msisdn, setMsisdn] = useState<string | undefined>(undefined);
-  const { data, isLoading, isError, error } = useRewards(msisdn);
+  const [form, setForm] = useState({
+    msisdn: '',
+    extBouquetId: '',
+    serviceKey: '',
+    fulfilmentStatus: ''
+  });
+  const [filters, setFilters] = useState<ListRewardsInput>(EMPTY_FILTERS);
+  const { data, isLoading, isError, error } = useRewards(filters);
+
+  const hasFilters = Object.keys(filters).length > 0;
 
   const handleSearch = (e: FormEvent) => {
     e.preventDefault();
-    setMsisdn(msisdnInput.trim() || undefined);
+    setFilters({
+      msisdn: form.msisdn.trim() || undefined,
+      extBouquetId: form.extBouquetId.trim() || undefined,
+      serviceKey: form.serviceKey.trim() || undefined,
+      fulfilmentStatus: form.fulfilmentStatus || undefined
+    });
   };
 
   const clearSearch = () => {
-    setMsisdnInput('');
-    setMsisdn(undefined);
+    setForm({ msisdn: '', extBouquetId: '', serviceKey: '', fulfilmentStatus: '' });
+    setFilters(EMPTY_FILTERS);
   };
 
   return (
@@ -30,25 +45,51 @@ export default function RewardsPage() {
       <PageHeader
         title="Rewards"
         description={
-          msisdn
-            ? `Reward history for ${msisdn}.`
+          hasFilters
+            ? 'Filtered reward history — e.g. every PENDING_MANUAL row for a bouquet is the bulk-fulfilment export list.'
             : 'Latest 200 rewards granted across all customers and drops.'
         }
       />
 
       <Card className="mb-4 p-3">
         <form onSubmit={handleSearch} className="flex flex-wrap items-end gap-3">
-          <div className="min-w-[220px] flex-1">
+          <div className="min-w-[200px] flex-1">
             <Input
-              placeholder="Search by MSISDN, e.g. 233559428678"
-              value={msisdnInput}
-              onChange={e => setMsisdnInput(e.target.value)}
+              placeholder="MSISDN, e.g. 233559428678"
+              value={form.msisdn}
+              onChange={e => setForm(f => ({ ...f, msisdn: e.target.value }))}
             />
+          </div>
+          <div className="min-w-[140px]">
+            <Input
+              placeholder="Bouquet, e.g. BQ1"
+              value={form.extBouquetId}
+              onChange={e => setForm(f => ({ ...f, extBouquetId: e.target.value }))}
+            />
+          </div>
+          <div className="min-w-[180px]">
+            <Input
+              placeholder="Service key, e.g. databundle-flexi"
+              value={form.serviceKey}
+              onChange={e => setForm(f => ({ ...f, serviceKey: e.target.value }))}
+            />
+          </div>
+          <div className="min-w-[180px]">
+            <Select
+              value={form.fulfilmentStatus}
+              onChange={e => setForm(f => ({ ...f, fulfilmentStatus: e.target.value }))}
+            >
+              <option value="">Any fulfilment status</option>
+              <option value="PENDING">Pending</option>
+              <option value="SUCCESS">Success</option>
+              <option value="FAILED">Failed</option>
+              <option value="PENDING_MANUAL">Pending (manual)</option>
+            </Select>
           </div>
           <Button type="submit" variant="secondary">
             Search
           </Button>
-          {msisdn && (
+          {hasFilters && (
             <Button type="button" variant="ghost" onClick={clearSearch}>
               Clear
             </Button>
@@ -59,10 +100,10 @@ export default function RewardsPage() {
       <QueryState isLoading={isLoading} isError={isError} error={error}>
         {data && data.length === 0 ? (
           <EmptyState
-            title={msisdn ? 'No rewards for this MSISDN' : 'No rewards granted yet'}
+            title={hasFilters ? 'No rewards match these filters' : 'No rewards granted yet'}
             description={
-              msisdn
-                ? 'Nothing found for that number — check it and try again.'
+              hasFilters
+                ? 'Nothing found for that combination — adjust the filters and try again.'
                 : 'Rewards will show up here once a whitelisted payment happens during a live drop.'
             }
           />

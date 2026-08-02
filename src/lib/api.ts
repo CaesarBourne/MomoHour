@@ -11,6 +11,7 @@ import type {
   EndDropInput,
   EndDropResult,
   GetActiveResponse,
+  ListRewardsInput,
   RewardHistory,
   Schedule,
   ServiceMap,
@@ -227,7 +228,14 @@ export async function triggerReward(
 
 export function listRewards(
   baseUrl: string,
-  msisdn?: string
+  filters: ListRewardsInput = {}
 ): Promise<ApiResult<RewardHistory[]>> {
-  return postJson(baseUrl, '/momo-hour/rewards', msisdn ? { msisdn } : {});
+  const body = Object.fromEntries(
+    Object.entries(filters).filter(([, value]) => value !== undefined && value !== '')
+  );
+  return postJson(
+    baseUrl,
+    '/momo-hour/rewards',
+    Object.keys(body).length ? body : { source: 'portal' }
+  );
 }

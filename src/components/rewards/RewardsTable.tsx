@@ -5,7 +5,10 @@ import type { RewardHistory } from '@/lib/types';
 const FULFILMENT_TONE: Record<string, 'success' | 'warning' | 'danger' | 'neutral'> = {
   SUCCESS: 'success',
   PENDING: 'warning',
-  FAILED: 'danger'
+  FAILED: 'danger',
+  // Terminal, awaiting a bulk/manual fulfilment pass — never live-dispatched
+  // (distinct from the transient in-flight PENDING above).
+  PENDING_MANUAL: 'warning'
 };
 
 export function RewardsTable({ rewards }: { rewards: RewardHistory[] }) {
@@ -14,6 +17,7 @@ export function RewardsTable({ rewards }: { rewards: RewardHistory[] }) {
       <Thead>
         <Th>MSISDN</Th>
         <Th>Bouquet</Th>
+        <Th>Service</Th>
         <Th>Amount</Th>
         <Th>Fulfilment</Th>
         <Th>Counted toward drop</Th>
@@ -24,6 +28,7 @@ export function RewardsTable({ rewards }: { rewards: RewardHistory[] }) {
           <Tr key={reward.id}>
             <Td className="font-mono text-xs">{reward.msisdn}</Td>
             <Td>{reward.ext_bouquet_id}</Td>
+            <Td className="font-mono text-xs text-slate-400">{reward.service_key ?? '—'}</Td>
             <Td>GHS {Number(reward.amount).toFixed(2)}</Td>
             <Td>
               <Badge tone={FULFILMENT_TONE[reward.fulfilment_status] ?? 'neutral'}>

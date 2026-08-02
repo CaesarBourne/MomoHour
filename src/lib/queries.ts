@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useBaseUrl } from './base-url';
 import { queryKeys } from './query-keys';
 import * as api from './api';
+import type { ListRewardsInput } from './types';
 
 /**
  * Every hook here throws when the underlying call fails at the network/HTTP
@@ -59,10 +60,10 @@ export function useCurrentActiveDrop() {
   });
 }
 
-export function useRewards(msisdn?: string) {
+export function useRewards(filters: ListRewardsInput = {}) {
   const { baseUrl } = useBaseUrl();
   return useQuery({
-    queryKey: queryKeys.rewards(baseUrl, msisdn),
-    queryFn: async () => unwrapOrThrow(await api.listRewards(baseUrl, msisdn))
+    queryKey: queryKeys.rewards(baseUrl, filters),
+    queryFn: async () => unwrapOrThrow(await api.listRewards(baseUrl, filters))
   });
 }

@@ -20,6 +20,11 @@ export interface ServiceMap {
   id: number;
   service_key: string;
   ext_bouquet_id: string;
+  /** Optional per-service override of the bouquet's own reward_type — null means "inherit." */
+  reward_type: string | null;
+  reward_value: string | null;
+  /** AUTO (default, live-dispatches) | MANUAL (never live-dispatches, only records PENDING_MANUAL). */
+  dispatch_mode: 'AUTO' | 'MANUAL';
   status: 'ACTIVE' | 'INACTIVE';
   created_at: string;
   updated_at: string;
@@ -73,6 +78,8 @@ export interface RewardHistory {
   id: string;
   drop_id: string;
   ext_bouquet_id: string;
+  /** Which whitelisted service triggered this reward — null for older rows. */
+  service_key: string | null;
   msisdn: string;
   sending_fri: string | null;
   receiving_fri: string | null;
@@ -82,7 +89,12 @@ export interface RewardHistory {
   reward_value: string | null;
   amount: string | number;
   status: string;
-  fulfilment_status: 'PENDING' | 'SUCCESS' | 'FAILED' | string;
+  /**
+   * PENDING (transient, in-flight) | SUCCESS | FAILED | PENDING_MANUAL
+   * (terminal — awaiting a bulk/manual fulfilment pass, no live dispatch was
+   * ever attempted).
+   */
+  fulfilment_status: 'PENDING' | 'SUCCESS' | 'FAILED' | 'PENDING_MANUAL' | string;
   /** Still counted toward its drop — flips false when the drop ends. */
   active: boolean | number;
   created_at: string;
@@ -105,6 +117,19 @@ export interface UpsertServiceInput {
   serviceKey: string;
   extBouquetId: string;
   status?: 'ACTIVE' | 'INACTIVE';
+  /** Optional override of the bouquet's own reward_type — omit/blank to inherit. */
+  rewardType?: string;
+  rewardValue?: string;
+  /** AUTO (default, live-dispatches) | MANUAL (never live-dispatches, only records PENDING_MANUAL). */
+  dispatchMode?: 'AUTO' | 'MANUAL';
+}
+
+export interface ListRewardsInput {
+  msisdn?: string;
+  extBouquetId?: string;
+  serviceKey?: string;
+  fulfilmentStatus?: string;
+  limit?: number;
 }
 
 export interface CreateScheduleInput {

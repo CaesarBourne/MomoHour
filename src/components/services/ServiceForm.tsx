@@ -28,7 +28,10 @@ export function ServiceForm({
   const [form, setForm] = useState({
     serviceKey: service?.service_key ?? '',
     extBouquetId: service?.ext_bouquet_id ?? '',
-    status: service?.status ?? 'ACTIVE'
+    status: service?.status ?? 'ACTIVE',
+    rewardType: service?.reward_type ?? '',
+    rewardValue: service?.reward_value ?? '',
+    dispatchMode: service?.dispatch_mode ?? 'AUTO'
   });
 
   const mutation = useMutation({
@@ -36,7 +39,10 @@ export function ServiceForm({
       api.upsertService(baseUrl, {
         serviceKey: form.serviceKey.trim(),
         extBouquetId: form.extBouquetId,
-        status: form.status as 'ACTIVE' | 'INACTIVE'
+        status: form.status as 'ACTIVE' | 'INACTIVE',
+        rewardType: form.rewardType.trim() || undefined,
+        rewardValue: form.rewardValue.trim() || undefined,
+        dispatchMode: form.dispatchMode as 'AUTO' | 'MANUAL'
       }),
     onSuccess: result => {
       if (!result.ok) return;
@@ -116,6 +122,49 @@ export function ServiceForm({
         >
           <option value="ACTIVE">Enabled</option>
           <option value="INACTIVE">Disabled</option>
+        </Select>
+      </Field>
+
+      <Field
+        label="Reward type override"
+        htmlFor="rewardType"
+        hint="Leave blank to inherit the bouquet's own reward type, e.g. cashback, airtime, data"
+      >
+        <Input
+          id="rewardType"
+          placeholder="(inherit from bouquet)"
+          value={form.rewardType}
+          onChange={e => setForm(f => ({ ...f, rewardType: e.target.value }))}
+        />
+      </Field>
+
+      <Field
+        label="Reward value override"
+        htmlFor="rewardValue"
+        hint="Leave blank to inherit the bouquet's own reward value, e.g. 500MB"
+      >
+        <Input
+          id="rewardValue"
+          placeholder="(inherit from bouquet)"
+          value={form.rewardValue}
+          onChange={e => setForm(f => ({ ...f, rewardValue: e.target.value }))}
+        />
+      </Field>
+
+      <Field
+        label="Dispatch mode"
+        htmlFor="dispatchMode"
+        hint="MANUAL never live-dispatches — it only records PENDING_MANUAL for a later bulk fulfilment pass"
+      >
+        <Select
+          id="dispatchMode"
+          value={form.dispatchMode}
+          onChange={e =>
+            setForm(f => ({ ...f, dispatchMode: e.target.value as 'AUTO' | 'MANUAL' }))
+          }
+        >
+          <option value="AUTO">Auto (live-dispatch)</option>
+          <option value="MANUAL">Manual (log only)</option>
         </Select>
       </Field>
 
