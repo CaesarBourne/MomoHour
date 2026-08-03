@@ -2,19 +2,21 @@
 
 import { PageHeader } from '@/components/ui/PageHeader';
 import { QueryState } from '@/components/ui/QueryState';
+import { RefreshButton } from '@/components/ui/RefreshButton';
 import { ActiveDropCard } from '@/components/drops/ActiveDropCard';
 import { ActivateForm } from '@/components/drops/ActivateForm';
 import { TriggerRewardForm } from '@/components/drops/TriggerRewardForm';
 import { useCurrentActiveDrop } from '@/lib/queries';
 
 export default function DropsPage() {
-  const { data, isLoading, isError, error } = useCurrentActiveDrop();
+  const { data, isLoading, isError, error, refetch, isFetching } = useCurrentActiveDrop();
 
   return (
     <div>
       <PageHeader
         title="Drops"
         description="Activate or end MoMo Hour's live reward window. Refreshes automatically every 30 seconds."
+        action={<RefreshButton onRefresh={() => refetch()} isRefreshing={isFetching} />}
       />
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">

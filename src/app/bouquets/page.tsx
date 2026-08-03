@@ -5,6 +5,7 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { QueryState } from '@/components/ui/QueryState';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Button } from '@/components/ui/Button';
+import { RefreshButton } from '@/components/ui/RefreshButton';
 import { Modal } from '@/components/ui/Modal';
 import { BouquetCard } from '@/components/bouquets/BouquetCard';
 import { BouquetForm } from '@/components/bouquets/BouquetForm';
@@ -12,7 +13,7 @@ import { useBouquetsWithServices } from '@/lib/queries';
 import type { Bouquet } from '@/lib/types';
 
 export default function BouquetsPage() {
-  const { data, isLoading, isError, error } = useBouquetsWithServices();
+  const { data, isLoading, isError, error, refetch, isFetching } = useBouquetsWithServices();
   const [editing, setEditing] = useState<Bouquet | 'new' | null>(null);
 
   return (
@@ -20,7 +21,12 @@ export default function BouquetsPage() {
       <PageHeader
         title="Bouquets"
         description="Each bouquet groups a set of eligible services under one reward. Only one bouquet's drop can be live at a time."
-        action={<Button onClick={() => setEditing('new')}>New bouquet</Button>}
+        action={
+          <div className="flex items-center gap-2">
+            <RefreshButton onRefresh={() => refetch()} isRefreshing={isFetching} />
+            <Button onClick={() => setEditing('new')}>New bouquet</Button>
+          </div>
+        }
       />
 
       <QueryState isLoading={isLoading} isError={isError} error={error}>

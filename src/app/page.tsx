@@ -7,6 +7,7 @@ import { QueryState } from '@/components/ui/QueryState';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { StatusBadge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
+import { RefreshButton } from '@/components/ui/RefreshButton';
 import { useBouquets, useCurrentActiveDrop, useRewards, useServices, useSchedules } from '@/lib/queries';
 import { localDateString } from '@/lib/date';
 
@@ -40,11 +41,26 @@ export default function DashboardPage() {
   const upcomingCount =
     schedules.data?.filter(s => s.campaign_date >= today && s.status === 'ACTIVE').length ?? 0;
 
+  const refreshAll = () => {
+    bouquets.refetch();
+    services.refetch();
+    schedules.refetch();
+    activeDrop.refetch();
+    rewards.refetch();
+  };
+  const isRefreshingAll =
+    bouquets.isFetching ||
+    services.isFetching ||
+    schedules.isFetching ||
+    activeDrop.isFetching ||
+    rewards.isFetching;
+
   return (
     <div>
       <PageHeader
         title="Dashboard"
         description="A snapshot of the MoMo Hour campaign right now."
+        action={<RefreshButton onRefresh={refreshAll} isRefreshing={isRefreshingAll} />}
       />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">

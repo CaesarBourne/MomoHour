@@ -7,6 +7,7 @@ import { EmptyState } from '@/components/ui/EmptyState';
 import { Card } from '@/components/ui/Card';
 import { Input, Select } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import { RefreshButton } from '@/components/ui/RefreshButton';
 import { RewardsTable } from '@/components/rewards/RewardsTable';
 import { useRewards } from '@/lib/queries';
 import type { ListRewardsInput } from '@/lib/types';
@@ -21,7 +22,7 @@ export default function RewardsPage() {
     fulfilmentStatus: ''
   });
   const [filters, setFilters] = useState<ListRewardsInput>(EMPTY_FILTERS);
-  const { data, isLoading, isError, error } = useRewards(filters);
+  const { data, isLoading, isError, error, refetch, isFetching } = useRewards(filters);
 
   const hasFilters = Object.keys(filters).length > 0;
 
@@ -49,6 +50,7 @@ export default function RewardsPage() {
             ? 'Filtered reward history — e.g. every PENDING_MANUAL row for a bouquet is the bulk-fulfilment export list.'
             : 'Latest 200 rewards granted across all customers and drops.'
         }
+        action={<RefreshButton onRefresh={() => refetch()} isRefreshing={isFetching} />}
       />
 
       <Card className="mb-4 p-3">

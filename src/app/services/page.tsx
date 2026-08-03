@@ -5,6 +5,7 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { QueryState } from '@/components/ui/QueryState';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Button } from '@/components/ui/Button';
+import { RefreshButton } from '@/components/ui/RefreshButton';
 import { Modal } from '@/components/ui/Modal';
 import { Input } from '@/components/ui/Input';
 import { Card } from '@/components/ui/Card';
@@ -14,7 +15,7 @@ import { useServices } from '@/lib/queries';
 import type { ServiceMap } from '@/lib/types';
 
 export default function ServicesPage() {
-  const { data, isLoading, isError, error } = useServices();
+  const { data, isLoading, isError, error, refetch, isFetching } = useServices();
   const [editing, setEditing] = useState<ServiceMap | 'new' | null>(null);
   const [search, setSearch] = useState('');
 
@@ -32,7 +33,12 @@ export default function ServicesPage() {
       <PageHeader
         title="Services"
         description="The serviceKey → bouquet whitelist. A payment only earns a reward when its service is ACTIVE here and its bouquet has a live drop."
-        action={<Button onClick={() => setEditing('new')}>Whitelist a service</Button>}
+        action={
+          <div className="flex items-center gap-2">
+            <RefreshButton onRefresh={() => refetch()} isRefreshing={isFetching} />
+            <Button onClick={() => setEditing('new')}>Whitelist a service</Button>
+          </div>
+        }
       />
 
       <Card className="mb-4 p-3">
