@@ -93,8 +93,8 @@ export function ScheduleList({ schedules }: { schedules: Schedule[] }) {
   const today = ghanaDateString();
   const sorted = [...schedules].sort((a, b) =>
     a.campaign_date === b.campaign_date
-      ? a.start_hour.localeCompare(b.start_hour)
-      : a.campaign_date.localeCompare(b.campaign_date)
+      ? b.start_hour.localeCompare(a.start_hour)
+      : b.campaign_date.localeCompare(a.campaign_date)
   );
 
   return (
