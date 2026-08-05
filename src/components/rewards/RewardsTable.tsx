@@ -11,12 +11,20 @@ const FULFILMENT_TONE: Record<string, 'success' | 'warning' | 'danger' | 'neutra
   PENDING_MANUAL: 'warning'
 };
 
-export function RewardsTable({ rewards }: { rewards: RewardHistory[] }) {
+export function RewardsTable({
+  rewards,
+  onSelectDrop
+}: {
+  rewards: RewardHistory[];
+  /** Click a row's Drop ID to filter the whole page down to just that drop. */
+  onSelectDrop?: (dropId: string) => void;
+}) {
   return (
     <Table>
       <Thead>
         <Th>MSISDN</Th>
         <Th>Bouquet</Th>
+        <Th>Drop</Th>
         <Th>Service</Th>
         <Th>Amount</Th>
         <Th>Fulfilment</Th>
@@ -28,6 +36,20 @@ export function RewardsTable({ rewards }: { rewards: RewardHistory[] }) {
           <Tr key={reward.id}>
             <Td className="font-mono text-xs">{reward.msisdn}</Td>
             <Td>{reward.ext_bouquet_id}</Td>
+            <Td className="font-mono text-xs text-slate-400">
+              {onSelectDrop ? (
+                <button
+                  type="button"
+                  title={`Filter to just this drop: ${reward.drop_id}`}
+                  onClick={() => onSelectDrop(reward.drop_id)}
+                  className="underline decoration-dotted hover:text-brand-600 dark:hover:text-brand-400"
+                >
+                  {reward.drop_id.slice(0, 8)}…
+                </button>
+              ) : (
+                <span title={reward.drop_id}>{reward.drop_id.slice(0, 8)}…</span>
+              )}
+            </Td>
             <Td className="font-mono text-xs text-slate-400">{reward.service_key ?? '—'}</Td>
             <Td>GHS {Number(reward.amount).toFixed(2)}</Td>
             <Td>

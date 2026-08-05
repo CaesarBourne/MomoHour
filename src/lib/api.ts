@@ -239,3 +239,12 @@ export function listRewards(
     Object.keys(body).length ? body : { source: 'portal' }
   );
 }
+
+/** Every drop that's ever run (any status), newest first — feeds the Rewards
+ * page's "pick a drop" dropdown. Optionally scoped to one bouquet. */
+export function listDrops(
+  baseUrl: string,
+  extBouquetId?: string
+): Promise<ApiResult<ActiveDrop[]>> {
+  return postJson(baseUrl, '/momo-hour/drops/list', { extBouquetId });
+}

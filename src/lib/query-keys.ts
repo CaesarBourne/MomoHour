@@ -7,6 +7,8 @@ export const queryKeys = {
   services: (baseUrl: string) => ['services', baseUrl] as const,
   schedules: (baseUrl: string) => ['schedules', baseUrl] as const,
   currentActiveDrop: (baseUrl: string) => ['current-active-drop', baseUrl] as const,
+  drops: (baseUrl: string, extBouquetId?: string) =>
+    ['drops', baseUrl, extBouquetId ?? null] as const,
   active: (baseUrl: string, extBouquetId: string) =>
     ['active', baseUrl, extBouquetId] as const,
   rewards: (baseUrl: string, filters: ListRewardsInput = {}) =>
@@ -15,6 +17,7 @@ export const queryKeys = {
       baseUrl,
       filters.msisdn ?? null,
       filters.extBouquetId ?? null,
+      filters.dropId ?? null,
       filters.serviceKey ?? null,
       filters.fulfilmentStatus ?? null,
       filters.limit ?? null

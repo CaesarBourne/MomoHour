@@ -41,3 +41,16 @@ export function ghanaTimeString(date: Date = new Date()): string {
     hour12: false
   }).format(date);
 }
+
+/** "Aug 5, 06:39–07:39" — a drop's window, in Ghana time, for dropdown/table
+ * labels where a raw drop_id (an opaque UUID) means nothing to a human. */
+export function formatGhanaWindow(startAt: string, endAt: string): string {
+  const start = new Date(startAt);
+  const end = new Date(endAt);
+  const day = new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Africa/Accra',
+    month: 'short',
+    day: 'numeric'
+  }).format(start);
+  return `${day}, ${ghanaTimeString(start)}–${ghanaTimeString(end)}`;
+}
