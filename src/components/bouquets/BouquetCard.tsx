@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useMutation } from '@tanstack/react-query';
 import { Card, CardBody, CardHeader } from '@/components/ui/Card';
 import { Badge, StatusBadge } from '@/components/ui/Badge';
@@ -46,6 +47,11 @@ export function BouquetCard({
         action={
           <div className="flex items-center gap-2">
             <StatusBadge status={bouquet.status} />
+            <Link href={`/rewards?extBouquetId=${encodeURIComponent(bouquet.ext_bouquet_id)}`}>
+              <Button size="sm" variant="ghost">
+                View rewards
+              </Button>
+            </Link>
             <Button size="sm" variant="secondary" onClick={onEdit}>
               Edit
             </Button>

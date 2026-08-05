@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, type FormEvent } from 'react';
+import { Suspense, useEffect, useState, type FormEvent } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { QueryState } from '@/components/ui/QueryState';
 import { EmptyState } from '@/components/ui/EmptyState';
@@ -9,20 +10,41 @@ import { Input, Select } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { RefreshButton } from '@/components/ui/RefreshButton';
 import { RewardsTable } from '@/components/rewards/RewardsTable';
-import { useRewards } from '@/lib/queries';
+import { useBouquets, useDrops, useRewards } from '@/lib/queries';
+import { formatGhanaWindow } from '@/lib/date';
 import type { ListRewardsInput } from '@/lib/types';
 
 const EMPTY_FILTERS: ListRewardsInput = {};
 
-export default function RewardsPage() {
+function RewardsPageInner() {
+  const searchParams = useSearchParams();
+  const bouquets = useBouquets();
+
   const [form, setForm] = useState({
     msisdn: '',
     extBouquetId: '',
+    dropId: '',
     serviceKey: '',
     fulfilmentStatus: ''
   });
   const [filters, setFilters] = useState<ListRewardsInput>(EMPTY_FILTERS);
   const { data, isLoading, isError, error, refetch, isFetching } = useRewards(filters);
+
+  // Deep link from the Bouquets page ("View rewards" on a bouquet card) —
+  // pre-fill and immediately apply the bouquet filter on load.
+  useEffect(() => {
+    const fromUrl = searchParams.get('extBouquetId');
+    if (fromUrl) {
+      setForm(f => ({ ...f, extBouquetId: fromUrl }));
+      setFilters(f => ({ ...f, extBouquetId: fromUrl }));
+    }
+    // Only ever read on mount — the form/search button owns filters after that.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Scoped to the currently-chosen bouquet so the list stays short and
+  // relevant; shows every bouquet's drops once no bouquet is picked yet.
+  const drops = useDrops(form.extBouquetId || undefined);
 
   const hasFilters = Object.keys(filters).length > 0;
 
@@ -30,15 +52,22 @@ export default function RewardsPage() {
     e.preventDefault();
     setFilters({
       msisdn: form.msisdn.trim() || undefined,
-      extBouquetId: form.extBouquetId.trim() || undefined,
+      extBouquetId: form.extBouquetId || undefined,
+      dropId: form.dropId || undefined,
       serviceKey: form.serviceKey.trim() || undefined,
       fulfilmentStatus: form.fulfilmentStatus || undefined
     });
   };
 
   const clearSearch = () => {
-    setForm({ msisdn: '', extBouquetId: '', serviceKey: '', fulfilmentStatus: '' });
+    setForm({ msisdn: '', extBouquetId: '', dropId: '', serviceKey: '', fulfilmentStatus: '' });
     setFilters(EMPTY_FILTERS);
+  };
+
+  const selectDrop = (dropId: string) => {
+    const drop = drops.data?.find(d => d.drop_id === dropId);
+    setForm(f => ({ ...f, dropId, extBouquetId: drop?.ext_bouquet_id ?? f.extBouquetId }));
+    setFilters(f => ({ ...f, dropId, extBouquetId: drop?.ext_bouquet_id ?? f.extBouquetId }));
   };
 
   return (
@@ -47,7 +76,7 @@ export default function RewardsPage() {
         title="Rewards"
         description={
           hasFilters
-            ? 'Filtered reward history — e.g. every PENDING_MANUAL row for a bouquet is the bulk-fulfilment export list.'
+            ? 'Filtered reward history — e.g. every FAILED or PENDING_MANUAL row for one specific drop is the retry/bulk-fulfilment export list.'
             : 'Latest 200 rewards granted across all customers and drops.'
         }
         action={<RefreshButton onRefresh={() => refetch()} isRefreshing={isFetching} />}
@@ -62,12 +91,35 @@ export default function RewardsPage() {
               onChange={e => setForm(f => ({ ...f, msisdn: e.target.value }))}
             />
           </div>
-          <div className="min-w-[140px]">
-            <Input
-              placeholder="Bouquet, e.g. BQ1"
+          <div className="min-w-[160px]">
+            <Select
               value={form.extBouquetId}
-              onChange={e => setForm(f => ({ ...f, extBouquetId: e.target.value }))}
-            />
+              onChange={e =>
+                // Changing bouquet invalidates whatever specific drop was picked.
+                setForm(f => ({ ...f, extBouquetId: e.target.value, dropId: '' }))
+              }
+            >
+              <option value="">Any bouquet</option>
+              {(bouquets.data ?? []).map(b => (
+                <option key={b.ext_bouquet_id} value={b.ext_bouquet_id}>
+                  {b.ext_bouquet_id} — {b.name}
+                </option>
+              ))}
+            </Select>
+          </div>
+          <div className="min-w-[240px]">
+            <Select
+              value={form.dropId}
+              onChange={e => setForm(f => ({ ...f, dropId: e.target.value }))}
+            >
+              <option value="">Any drop</option>
+              {(drops.data ?? []).map(d => (
+                <option key={d.drop_id} value={d.drop_id}>
+                  {d.ext_bouquet_id} — {formatGhanaWindow(d.start_at, d.end_at)}
+                  {d.status === 'ACTIVE' ? ' (live)' : ''}
+                </option>
+              ))}
+            </Select>
           </div>
           <div className="min-w-[180px]">
             <Input
@@ -111,10 +163,18 @@ export default function RewardsPage() {
           />
         ) : (
           <Card>
-            <RewardsTable rewards={data ?? []} />
+            <RewardsTable rewards={data ?? []} onSelectDrop={selectDrop} />
           </Card>
         )}
       </QueryState>
     </div>
+  );
+}
+
+export default function RewardsPage() {
+  return (
+    <Suspense fallback={null}>
+      <RewardsPageInner />
+    </Suspense>
   );
 }

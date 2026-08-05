@@ -60,6 +60,14 @@ export function useCurrentActiveDrop() {
   });
 }
 
+export function useDrops(extBouquetId?: string) {
+  const { baseUrl } = useBaseUrl();
+  return useQuery({
+    queryKey: queryKeys.drops(baseUrl, extBouquetId),
+    queryFn: async () => unwrapOrThrow(await api.listDrops(baseUrl, extBouquetId))
+  });
+}
+
 export function useRewards(filters: ListRewardsInput = {}) {
   const { baseUrl } = useBaseUrl();
   return useQuery({

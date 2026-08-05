@@ -127,6 +127,8 @@ export interface UpsertServiceInput {
 export interface ListRewardsInput {
   msisdn?: string;
   extBouquetId?: string;
+  /** Scope to ONE specific drop, not every drop that bouquet has ever run. */
+  dropId?: string;
   serviceKey?: string;
   fulfilmentStatus?: string;
   limit?: number;
