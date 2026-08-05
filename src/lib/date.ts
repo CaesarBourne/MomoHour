@@ -12,3 +12,32 @@ export function localDateString(date: Date = new Date()): string {
   const day = String(date.getDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
 }
+
+/**
+ * MoMo Hour is Ghana-only, so every `campaign_date`/`start_hour`/`end_hour`
+ * the backend stores and self-activates against is Ghana local time (GMT,
+ * no DST) — NOT the admin's own browser timezone. `localDateString`/raw
+ * `new Date()` above are fine when the admin happens to BE in Ghana, but
+ * silently wrong otherwise (e.g. an admin in Nigeria, UTC+1, sees "today"/
+ * "now" an hour ahead of Ghana's actual wall clock — enough to misjudge
+ * whether a schedule has started, or land a new one on the wrong calendar
+ * day near midnight). These two force the Africa/Accra timezone explicitly
+ * regardless of where the browser itself is.
+ */
+export function ghanaDateString(date: Date = new Date()): string {
+  return new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Africa/Accra',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  }).format(date);
+}
+
+export function ghanaTimeString(date: Date = new Date()): string {
+  return new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Africa/Accra',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  }).format(date);
+}

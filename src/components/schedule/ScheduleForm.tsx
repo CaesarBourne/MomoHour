@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Field, Input, Select } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
@@ -11,7 +11,7 @@ import { useToast } from '@/providers/ToastProvider';
 import { queryKeys } from '@/lib/query-keys';
 import * as api from '@/lib/api';
 import { useBouquets } from '@/lib/queries';
-import { localDateString } from '@/lib/date';
+import { ghanaDateString, ghanaTimeString } from '@/lib/date';
 import type { CreateScheduleResult } from '@/lib/types';
 
 /** Every drop is a fixed 60 minutes — mirrors the backend's own computation
@@ -29,15 +29,38 @@ function addOneHour(startHour: string): string | null {
   return `${hours}:${minutes}`;
 }
 
+/**
+ * MoMo Hour is Ghana-only — every `campaignDate`/`startHour` typed below is
+ * interpreted as GHANA local time (GMT, no DST) by the backend, regardless
+ * of what timezone the admin filling out this form is actually in. The date/
+ * time inputs below are plain `HH:MM`/`YYYY-MM-DD` strings with no timezone
+ * conversion applied — so an admin outside Ghana (e.g. Nigeria, UTC+1) who
+ * types "the current time" from their own clock schedules exactly one hour
+ * later than they meant to. This live readout exists so that mistake is
+ * visible before submitting, not discovered later as a confusing "why isn't
+ * my drop live yet."
+ */
+function useCurrentGhanaTime(): string {
+  const [ghanaTime, setGhanaTime] = useState(() => ghanaTimeString());
+
+  useEffect(() => {
+    const interval = setInterval(() => setGhanaTime(ghanaTimeString()), 30_000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return ghanaTime;
+}
+
 export function ScheduleForm({ onSuccess }: { onSuccess: () => void }) {
   const { baseUrl } = useBaseUrl();
   const { show } = useToast();
   const queryClient = useQueryClient();
   const bouquets = useBouquets();
+  const ghanaTime = useCurrentGhanaTime();
 
   const [form, setForm] = useState({
     extBouquetId: '',
-    campaignDate: localDateString(),
+    campaignDate: ghanaDateString(),
     startHour: '18:00',
     status: 'ACTIVE'
   });
@@ -116,7 +139,7 @@ export function ScheduleForm({ onSuccess }: { onSuccess: () => void }) {
         )}
       </Field>
 
-      <Field label="Campaign date" htmlFor="campaignDate">
+      <Field label="Campaign date (Ghana time)" htmlFor="campaignDate">
         <Input
           id="campaignDate"
           type="date"
@@ -128,8 +151,11 @@ export function ScheduleForm({ onSuccess }: { onSuccess: () => void }) {
 
       <div className="grid grid-cols-2 gap-4">
         <Field
-          label="Start hour"
+          label="Start hour (Ghana time, GMT)"
           htmlFor="startHour"
+          hint={
+            startTooLate ? undefined : `It's ${ghanaTime} in Ghana right now — not your local time`
+          }
           error={startTooLate ? 'Must be 23:00 or earlier — a drop can\'t cross midnight.' : undefined}
         >
           <Input

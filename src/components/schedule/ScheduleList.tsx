@@ -8,7 +8,7 @@ import { useBaseUrl } from '@/lib/base-url';
 import { useToast } from '@/providers/ToastProvider';
 import { queryKeys } from '@/lib/query-keys';
 import * as api from '@/lib/api';
-import { localDateString } from '@/lib/date';
+import { ghanaDateString, ghanaTimeString } from '@/lib/date';
 import type { Schedule } from '@/lib/types';
 
 function ScheduleRow({ schedule, today }: { schedule: Schedule; today: string }) {
@@ -41,7 +41,7 @@ function ScheduleRow({ schedule, today }: { schedule: Schedule; today: string })
   // be rejected server-side (SCHEDULE_ALREADY_ELAPSED) since it can never
   // self-activate again — disable just the "Enable" action, not the whole
   // row, since disabling is still meaningful.
-  const nowHHMM = new Date().toTimeString().slice(0, 5);
+  const nowHHMM = ghanaTimeString();
   const isElapsedToday = schedule.campaign_date === today && schedule.end_hour <= nowHHMM;
   const willEnable = nextStatus === 'ACTIVE';
   const enableBlocked = willEnable && isElapsedToday;
@@ -90,7 +90,7 @@ function ScheduleRow({ schedule, today }: { schedule: Schedule; today: string })
 }
 
 export function ScheduleList({ schedules }: { schedules: Schedule[] }) {
-  const today = localDateString();
+  const today = ghanaDateString();
   const sorted = [...schedules].sort((a, b) =>
     a.campaign_date === b.campaign_date
       ? a.start_hour.localeCompare(b.start_hour)
@@ -102,7 +102,7 @@ export function ScheduleList({ schedules }: { schedules: Schedule[] }) {
       <Thead>
         <Th>Date</Th>
         <Th>Bouquet</Th>
-        <Th>Window</Th>
+        <Th>Window (Ghana time)</Th>
         <Th>Status</Th>
         <Th>When</Th>
         <Th>

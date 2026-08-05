@@ -9,7 +9,7 @@ import { StatusBadge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { RefreshButton } from '@/components/ui/RefreshButton';
 import { useBouquets, useCurrentActiveDrop, useRewards, useServices, useSchedules } from '@/lib/queries';
-import { localDateString } from '@/lib/date';
+import { ghanaDateString } from '@/lib/date';
 
 function StatCard({ label, value, hint }: { label: string; value: string | number; hint?: string }) {
   return (
@@ -37,7 +37,7 @@ export default function DashboardPage() {
   const activeDrop = useCurrentActiveDrop();
   const rewards = useRewards();
 
-  const today = localDateString();
+  const today = ghanaDateString();
   const upcomingCount =
     schedules.data?.filter(s => s.campaign_date >= today && s.status === 'ACTIVE').length ?? 0;
 
