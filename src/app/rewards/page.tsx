@@ -9,10 +9,12 @@ import { Card } from '@/components/ui/Card';
 import { Input, Select } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { RefreshButton } from '@/components/ui/RefreshButton';
+import { ExportCsvButton } from '@/components/ui/ExportCsvButton';
 import { RewardsTable } from '@/components/rewards/RewardsTable';
 import { useBouquets, useDrops, useRewards } from '@/lib/queries';
-import { formatGhanaWindow } from '@/lib/date';
-import type { ListRewardsInput } from '@/lib/types';
+import { formatGhanaWindow, ghanaDateString } from '@/lib/date';
+import { exportToCsv } from '@/lib/csv';
+import type { ListRewardsInput, RewardHistory } from '@/lib/types';
 
 const EMPTY_FILTERS: ListRewardsInput = {};
 
@@ -70,6 +72,25 @@ function RewardsPageInner() {
     setFilters(f => ({ ...f, dropId, extBouquetId: drop?.ext_bouquet_id ?? f.extBouquetId }));
   };
 
+  const handleExport = () => {
+    const rows = data ?? [];
+    const scope = filters.extBouquetId ?? filters.dropId?.slice(0, 8) ?? 'all';
+    exportToCsv<RewardHistory>(`momohour-rewards-${scope}-${ghanaDateString()}.csv`, rows, [
+      { header: 'MSISDN', value: r => r.msisdn },
+      { header: 'Bouquet', value: r => r.ext_bouquet_id },
+      { header: 'Drop ID', value: r => r.drop_id },
+      { header: 'Service', value: r => r.service_key ?? '' },
+      { header: 'Reward type', value: r => r.reward_type },
+      { header: 'Reward value', value: r => r.reward_value ?? '' },
+      { header: 'Amount (GHS)', value: r => Number(r.amount).toFixed(2) },
+      { header: 'Fulfilment status', value: r => r.fulfilment_status },
+      { header: 'Reward transaction ID', value: r => r.reward_transaction_id ?? '' },
+      { header: 'Source transaction ID', value: r => r.source_transaction_id ?? '' },
+      { header: 'Counted toward drop', value: r => (Number(r.active) ? 'Yes' : 'No') },
+      { header: 'Granted at', value: r => r.created_at }
+    ]);
+  };
+
   return (
     <div>
       <PageHeader
@@ -79,7 +100,12 @@ function RewardsPageInner() {
             ? 'Filtered reward history — e.g. every FAILED or PENDING_MANUAL row for one specific drop is the retry/bulk-fulfilment export list.'
             : 'Latest 200 rewards granted across all customers and drops.'
         }
-        action={<RefreshButton onRefresh={() => refetch()} isRefreshing={isFetching} />}
+        action={
+          <div className="flex items-center gap-2">
+            <ExportCsvButton onExport={handleExport} disabled={!data || data.length === 0} />
+            <RefreshButton onRefresh={() => refetch()} isRefreshing={isFetching} />
+          </div>
+        }
       />
 
       <Card className="mb-4 p-3">

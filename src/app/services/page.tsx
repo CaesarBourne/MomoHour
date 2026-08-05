@@ -6,12 +6,15 @@ import { QueryState } from '@/components/ui/QueryState';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Button } from '@/components/ui/Button';
 import { RefreshButton } from '@/components/ui/RefreshButton';
+import { ExportCsvButton } from '@/components/ui/ExportCsvButton';
 import { Modal } from '@/components/ui/Modal';
 import { Input } from '@/components/ui/Input';
 import { Card } from '@/components/ui/Card';
 import { ServiceTable } from '@/components/services/ServiceTable';
 import { ServiceForm } from '@/components/services/ServiceForm';
 import { useServices } from '@/lib/queries';
+import { ghanaDateString } from '@/lib/date';
+import { exportToCsv } from '@/lib/csv';
 import type { ServiceMap } from '@/lib/types';
 
 export default function ServicesPage() {
@@ -28,6 +31,18 @@ export default function ServicesPage() {
     );
   }, [data, search]);
 
+  const handleExport = () => {
+    exportToCsv<ServiceMap>(`momohour-services-${ghanaDateString()}.csv`, filtered, [
+      { header: 'Service key', value: s => s.service_key },
+      { header: 'Bouquet', value: s => s.ext_bouquet_id },
+      { header: 'Reward type', value: s => s.reward_type ?? '' },
+      { header: 'Reward value', value: s => s.reward_value ?? '' },
+      { header: 'Dispatch mode', value: s => s.dispatch_mode },
+      { header: 'Status', value: s => s.status },
+      { header: 'Updated at', value: s => s.updated_at }
+    ]);
+  };
+
   return (
     <div>
       <PageHeader
@@ -35,6 +50,7 @@ export default function ServicesPage() {
         description="The serviceKey → bouquet whitelist. A payment only earns a reward when its service is ACTIVE here and its bouquet has a live drop."
         action={
           <div className="flex items-center gap-2">
+            <ExportCsvButton onExport={handleExport} disabled={filtered.length === 0} />
             <RefreshButton onRefresh={() => refetch()} isRefreshing={isFetching} />
             <Button onClick={() => setEditing('new')}>Whitelist a service</Button>
           </div>
