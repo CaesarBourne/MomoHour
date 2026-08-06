@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useBaseUrl } from '@/lib/base-url';
+import { ThemeToggle } from '@/components/ui/ThemeToggle';
 
 export function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
   const { baseUrl } = useBaseUrl();
@@ -15,7 +16,7 @@ export function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
       >
         ☰
       </button>
-      <div className="flex min-w-0 items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+      <div className="flex min-w-0 flex-1 items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
         <span className="hidden sm:inline">Target server:</span>
         <Link
           href="/settings"
@@ -25,6 +26,7 @@ export function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
           {baseUrl}
         </Link>
       </div>
+      <ThemeToggle />
     </header>
   );
 }
