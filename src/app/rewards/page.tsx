@@ -32,7 +32,7 @@ function RewardsPageInner() {
   const [filters, setFilters] = useState<ListRewardsInput>(EMPTY_FILTERS);
   const { data, isLoading, isError, error, refetch, isFetching } = useRewards(filters);
 
-  // Deep link from the Bouquets page ("View rewards" on a bouquet card) —
+  // Deep link from the Bouquets page ("View rewards" on a bouquet card) -
   // pre-fill and immediately apply the bouquet filter on load.
   useEffect(() => {
     const fromUrl = searchParams.get('extBouquetId');
@@ -40,7 +40,7 @@ function RewardsPageInner() {
       setForm(f => ({ ...f, extBouquetId: fromUrl }));
       setFilters(f => ({ ...f, extBouquetId: fromUrl }));
     }
-    // Only ever read on mount — the form/search button owns filters after that.
+    // Only ever read on mount - the form/search button owns filters after that.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -97,7 +97,7 @@ function RewardsPageInner() {
         title="Rewards"
         description={
           hasFilters
-            ? 'Filtered reward history — e.g. every FAILED or PENDING_MANUAL row for one specific drop is the retry/bulk-fulfilment export list.'
+            ? 'Filtered reward history - e.g. every FAILED or PENDING_MANUAL row for one specific drop is the retry/bulk-fulfilment export list.'
             : 'Latest 200 rewards granted across all customers and drops.'
         }
         action={
@@ -128,7 +128,7 @@ function RewardsPageInner() {
               <option value="">Any bouquet</option>
               {(bouquets.data ?? []).map(b => (
                 <option key={b.ext_bouquet_id} value={b.ext_bouquet_id}>
-                  {b.ext_bouquet_id} — {b.name}
+                  {b.ext_bouquet_id} - {b.name}
                 </option>
               ))}
             </Select>
@@ -141,7 +141,7 @@ function RewardsPageInner() {
               <option value="">Any drop</option>
               {(drops.data ?? []).map(d => (
                 <option key={d.drop_id} value={d.drop_id}>
-                  {d.ext_bouquet_id} — {formatGhanaWindow(d.start_at, d.end_at)}
+                  {d.ext_bouquet_id} - {formatGhanaWindow(d.start_at, d.end_at)}
                   {d.status === 'ACTIVE' ? ' (live)' : ''}
                 </option>
               ))}
@@ -183,7 +183,7 @@ function RewardsPageInner() {
             title={hasFilters ? 'No rewards match these filters' : 'No rewards granted yet'}
             description={
               hasFilters
-                ? 'Nothing found for that combination — adjust the filters and try again.'
+                ? 'Nothing found for that combination - adjust the filters and try again.'
                 : 'Rewards will show up here once a whitelisted payment happens during a live drop.'
             }
           />

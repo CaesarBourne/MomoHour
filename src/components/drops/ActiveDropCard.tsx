@@ -15,7 +15,7 @@ import * as api from '@/lib/api';
 import type { ActiveDrop } from '@/lib/types';
 
 function formatDateTime(value?: string | null) {
-  if (!value) return '—';
+  if (!value) return '-';
   return new Date(value).toLocaleString();
 }
 

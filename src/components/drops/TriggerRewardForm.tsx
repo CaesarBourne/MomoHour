@@ -11,7 +11,7 @@ import { useToast } from '@/providers/ToastProvider';
 import * as api from '@/lib/api';
 
 /**
- * Manual/testing path for `POST /momo-hour/trigger` — mirrors what
+ * Manual/testing path for `POST /momo-hour/trigger` - mirrors what
  * Ayo/MiWay/Sanlam-Allianz call server-side after a vendor-direct charge
  * succeeds. Useful to verify a serviceKey/bouquet whitelist end-to-end
  * without needing a real payment.
@@ -37,7 +37,7 @@ export function TriggerRewardForm() {
       }),
     onSuccess: result => {
       if (!result.ok) return;
-      show({ tone: 'success', title: 'Reward triggered', description: `${form.msisdn} — GHS ${form.amount}` });
+      show({ tone: 'success', title: 'Reward triggered', description: `${form.msisdn} - GHS ${form.amount}` });
     }
   });
 
@@ -60,7 +60,7 @@ export function TriggerRewardForm() {
     <Card>
       <CardHeader
         title="Manually trigger a reward"
-        description="Testing/integration only — bypasses the payment flow entirely and calls the reward engine directly. Requires a live drop for the resolved bouquet."
+        description="Testing/integration only - bypasses the payment flow entirely and calls the reward engine directly. Requires a live drop for the resolved bouquet."
         action={
           <Button variant="ghost" size="sm" onClick={() => setOpen(false)}>
             Hide

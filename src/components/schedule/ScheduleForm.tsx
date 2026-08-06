@@ -14,7 +14,7 @@ import { useBouquets } from '@/lib/queries';
 import { ghanaDateString, ghanaTimeString } from '@/lib/date';
 import type { CreateScheduleResult } from '@/lib/types';
 
-/** Every drop is a fixed 60 minutes — mirrors the backend's own computation
+/** Every drop is a fixed 60 minutes - mirrors the backend's own computation
  * (GHA/src/momo-hour/momo-hour.service.ts) purely for display here; the
  * server is the one that actually enforces and computes it. */
 function addOneHour(startHour: string): string | null {
@@ -30,11 +30,11 @@ function addOneHour(startHour: string): string | null {
 }
 
 /**
- * MoMo Hour is Ghana-only — every `campaignDate`/`startHour` typed below is
+ * MoMo Hour is Ghana-only - every `campaignDate`/`startHour` typed below is
  * interpreted as GHANA local time (GMT, no DST) by the backend, regardless
  * of what timezone the admin filling out this form is actually in. The date/
  * time inputs below are plain `HH:MM`/`YYYY-MM-DD` strings with no timezone
- * conversion applied — so an admin outside Ghana (e.g. Nigeria, UTC+1) who
+ * conversion applied - so an admin outside Ghana (e.g. Nigeria, UTC+1) who
  * types "the current time" from their own clock schedules exactly one hour
  * later than they meant to. This live readout exists so that mistake is
  * visible before submitting, not discovered later as a confusing "why isn't
@@ -124,7 +124,7 @@ export function ScheduleForm({ onSuccess }: { onSuccess: () => void }) {
             </option>
             {bouquetOptions.map(b => (
               <option key={b.ext_bouquet_id} value={b.ext_bouquet_id}>
-                {b.ext_bouquet_id} — {b.name}
+                {b.ext_bouquet_id} - {b.name}
               </option>
             ))}
           </Select>
@@ -154,9 +154,9 @@ export function ScheduleForm({ onSuccess }: { onSuccess: () => void }) {
           label="Start hour (Ghana time, GMT)"
           htmlFor="startHour"
           hint={
-            startTooLate ? undefined : `It's ${ghanaTime} in Ghana right now — not your local time`
+            startTooLate ? undefined : `It's ${ghanaTime} in Ghana right now - not your local time`
           }
-          error={startTooLate ? 'Must be 23:00 or earlier — a drop can\'t cross midnight.' : undefined}
+          error={startTooLate ? 'Must be 23:00 or earlier - a drop can\'t cross midnight.' : undefined}
         >
           <Input
             id="startHour"
@@ -167,7 +167,7 @@ export function ScheduleForm({ onSuccess }: { onSuccess: () => void }) {
           />
         </Field>
         <Field label="End hour" hint="Fixed at start + 60 minutes">
-          <Input value={computedEndHour ?? '—'} disabled />
+          <Input value={computedEndHour ?? '-'} disabled />
         </Field>
       </div>
 

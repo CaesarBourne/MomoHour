@@ -8,7 +8,7 @@ import type { ListRewardsInput } from './types';
 
 /**
  * Every hook here throws when the underlying call fails at the network/HTTP
- * level, so TanStack Query's own `isError`/`error` states handle that case —
+ * level, so TanStack Query's own `isError`/`error` states handle that case -
  * list endpoints never return an in-body business rejection, only mutations
  * do (those are handled separately per-form via useMutation + ApiResult).
  */

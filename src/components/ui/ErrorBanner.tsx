@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 
 /**
  * Renders a business-rule rejection (e.g. TIME_SLOT_CONFLICT, ANOTHER_DROP_ACTIVE)
- * distinctly from a network/HTTP failure — same red family, different icon +
+ * distinctly from a network/HTTP failure - same red family, different icon +
  * copy, since the fix differs (change your input vs. check the server).
  */
 export function ErrorBanner({

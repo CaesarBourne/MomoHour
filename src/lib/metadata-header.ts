@@ -1,6 +1,6 @@
 /**
  * The `metadata` header GHA's AuthMiddleware requires on every request (see
- * GHA/src/auth/auth.middleware.ts — 400 "HEADERS MISSING" without it). The
+ * GHA/src/auth/auth.middleware.ts - 400 "HEADERS MISSING" without it). The
  * middleware only checks presence, not shape, but some downstream
  * logging/analytics reads fields out of it, so this portal sends the exact
  * realistic mobile-app-shaped payload captured from real traffic rather than

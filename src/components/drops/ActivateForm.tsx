@@ -46,7 +46,7 @@ export function ActivateForm() {
     <Card>
       <CardHeader
         title="Activate a drop manually"
-        description="Skips the schedule — writes the live-drop key immediately."
+        description="Skips the schedule - writes the live-drop key immediately."
       />
       <CardBody>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -78,7 +78,7 @@ export function ActivateForm() {
                 </option>
                 {bouquetOptions.map(b => (
                   <option key={b.ext_bouquet_id} value={b.ext_bouquet_id}>
-                    {b.ext_bouquet_id} — {b.name}
+                    {b.ext_bouquet_id} - {b.name}
                   </option>
                 ))}
               </Select>
@@ -94,7 +94,7 @@ export function ActivateForm() {
           </Field>
 
           <p className="text-xs text-slate-400">
-            Every drop runs for a fixed 60 minutes — this isn&apos;t configurable.
+            Every drop runs for a fixed 60 minutes - this isn&apos;t configurable.
           </p>
 
           <div className="flex justify-end">

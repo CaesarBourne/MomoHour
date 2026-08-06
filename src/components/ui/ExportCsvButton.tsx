@@ -3,7 +3,7 @@
 import { Button } from './Button';
 
 /** Exports whatever's currently on screen (i.e. already filtered) as a CSV
- * download — the export itself has no separate filter state of its own. */
+ * download - the export itself has no separate filter state of its own. */
 export function ExportCsvButton({
   onExport,
   disabled,

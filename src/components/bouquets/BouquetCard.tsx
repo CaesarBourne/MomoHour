@@ -11,7 +11,7 @@ import * as api from '@/lib/api';
 import type { BouquetWithServices, LiveDropData } from '@/lib/types';
 
 function formatDate(value?: string | null) {
-  if (!value) return '—';
+  if (!value) return '-';
   return new Date(value).toLocaleDateString();
 }
 
@@ -40,7 +40,7 @@ export function BouquetCard({
         title={
           <span className="flex items-center gap-2">
             {bouquet.ext_bouquet_id}
-            <span className="font-normal text-slate-500 dark:text-slate-400">— {bouquet.name}</span>
+            <span className="font-normal text-slate-500 dark:text-slate-400">- {bouquet.name}</span>
           </span>
         }
         description={`${bouquet.category} · ${bouquet.reward_type} · match ${bouquet.match_ratio}x · cap GHS ${bouquet.cap_amount}`}

@@ -33,21 +33,21 @@ export default function SettingsPage() {
     <div>
       <PageHeader
         title="Settings"
-        description="Point this portal at any GHA server — local, dev, UAT, or production."
+        description="Point this portal at any GHA server - local, dev, UAT, or production."
       />
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Card>
           <CardHeader
             title="Target GHA server"
-            description="Saved in this browser only — no rebuild needed to switch environments."
+            description="Saved in this browser only - no rebuild needed to switch environments."
           />
           <CardBody>
             <form onSubmit={handleSave} className="flex flex-col gap-4">
               {result && !result.ok && <ErrorBanner kind={result.kind} message={result.message} />}
               {result && result.ok && (
                 <div className="rounded-md border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-800 dark:border-emerald-900/50 dark:bg-emerald-950/40 dark:text-emerald-300">
-                  ✓ Connected — found {result.data.length} bouquet(s) at this URL.
+                  ✓ Connected - found {result.data.length} bouquet(s) at this URL.
                 </div>
               )}
 
@@ -91,7 +91,7 @@ export default function SettingsPage() {
         </Card>
 
         <Card>
-          <CardHeader title="Access control — read this" />
+          <CardHeader title="Access control - read this" />
           <CardBody className="space-y-2 text-sm text-slate-600 dark:text-slate-300">
             <p>
               GHA&apos;s <code className="rounded bg-slate-100 px-1 py-0.5 text-xs dark:bg-slate-800">/momo-hour/*</code>{' '}
@@ -100,12 +100,12 @@ export default function SettingsPage() {
             </p>
             <p>
               That means <strong>anyone who can reach the base URL above can fully administer MoMo
-              Hour</strong> — create/activate drops, change the service whitelist, etc. This app adds
+              Hour</strong> - create/activate drops, change the service whitelist, etc. This app adds
               no login of its own.
             </p>
             <p>
               Restrict who can reach it at the network/deployment layer (VPN, IP allowlist,
-              internal-only ingress) — never point it at a publicly reachable production URL without
+              internal-only ingress) - never point it at a publicly reachable production URL without
               that in place.
             </p>
           </CardBody>

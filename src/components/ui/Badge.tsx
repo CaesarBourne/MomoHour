@@ -24,7 +24,7 @@ export function Badge({ tone = 'neutral', children }: { tone?: Tone; children: R
 }
 
 /**
- * For the DB `status` enable/disable flag (bouquets, services, schedules) —
+ * For the DB `status` enable/disable flag (bouquets, services, schedules) -
  * deliberately NOT worded "Active"/"Inactive", since that reads as "live
  * right now" and this flag means "whitelisted", a permanent setting
  * unrelated to whether a drop is actually live at this moment. Reserve
