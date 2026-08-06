@@ -20,7 +20,7 @@ export default function SchedulePage() {
     <div>
       <PageHeader
         title="Schedule"
-        description="Plan when a bouquet's drop runs on a specific calendar date. When the window is reached, the drop self-activates from real traffic — no manual step required. Disable an upcoming slot to cancel it before it goes live."
+        description="Plan when a bouquet's drop runs on a specific calendar date. When the window is reached, the drop self-activates from real traffic - no manual step required. Disable an upcoming slot to cancel it before it goes live."
         action={
           <div className="flex items-center gap-2">
             <RefreshButton onRefresh={() => refetch()} isRefreshing={isFetching} />

@@ -6,7 +6,7 @@ const FULFILMENT_TONE: Record<string, 'success' | 'warning' | 'danger' | 'neutra
   SUCCESS: 'success',
   PENDING: 'warning',
   FAILED: 'danger',
-  // Terminal, awaiting a bulk/manual fulfilment pass — never live-dispatched
+  // Terminal, awaiting a bulk/manual fulfilment pass - never live-dispatched
   // (distinct from the transient in-flight PENDING above).
   PENDING_MANUAL: 'warning'
 };
@@ -50,7 +50,7 @@ export function RewardsTable({
                 <span title={reward.drop_id}>{reward.drop_id.slice(0, 8)}…</span>
               )}
             </Td>
-            <Td className="font-mono text-xs text-slate-400">{reward.service_key ?? '—'}</Td>
+            <Td className="font-mono text-xs text-slate-400">{reward.service_key ?? '-'}</Td>
             <Td>GHS {Number(reward.amount).toFixed(2)}</Td>
             <Td>
               <Badge tone={FULFILMENT_TONE[reward.fulfilment_status] ?? 'neutral'}>
@@ -59,7 +59,7 @@ export function RewardsTable({
             </Td>
             <Td>
               <Badge tone={Number(reward.active) ? 'success' : 'neutral'}>
-                {Number(reward.active) ? 'Yes' : 'No — drop ended'}
+                {Number(reward.active) ? 'Yes' : 'No - drop ended'}
               </Badge>
             </Td>
             <Td className="text-xs text-slate-400">{new Date(reward.created_at).toLocaleString()}</Td>

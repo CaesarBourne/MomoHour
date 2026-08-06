@@ -1,6 +1,6 @@
 {
   "name": "momo-hour-portal",
-  "description": "Admin web portal for the MoMo Hour reward campaign feature — bouquets, service whitelist, schedules, drop activation, and reward history. Talks directly to the GHA pod's /momo-hour/* API.",
+  "description": "Admin web portal for the MoMo Hour reward campaign feature - bouquets, service whitelist, schedules, drop activation, and reward history. Talks directly to the GHA pod's /momo-hour/* API.",
   "version": "1.0.0",
   "private": true,
   "scripts": {

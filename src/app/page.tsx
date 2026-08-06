@@ -26,7 +26,7 @@ function StatCard({ label, value, hint }: { label: string; value: string | numbe
 }
 
 function formatDateTime(value?: string | null) {
-  if (!value) return '—';
+  if (!value) return '-';
   return new Date(value).toLocaleString();
 }
 

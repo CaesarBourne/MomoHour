@@ -64,7 +64,7 @@ export function BouquetForm({
       show({
         tone: 'success',
         title: isEditing ? 'Bouquet updated' : 'Bouquet created',
-        description: `${form.extBouquetId} — ${form.name}`
+        description: `${form.extBouquetId} - ${form.name}`
       });
       onSuccess();
     }

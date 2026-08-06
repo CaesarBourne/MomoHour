@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 // Applies the saved/system theme to <html> BEFORE React hydrates, so there's
 // no flash of the wrong theme on load. Must stay in exact sync with
 // ThemeProvider's own logic (same storage key, same system-preference
-// fallback) — this is a plain inline script (not a React effect) because it
+// fallback) - this is a plain inline script (not a React effect) because it
 // has to run before first paint, which a client component can't do.
 const NO_FLASH_THEME_SCRIPT = `
 (function () {

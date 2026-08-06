@@ -31,7 +31,7 @@ export type ApiResult<T> =
 /**
  * Every GHA `/momo-hour/*` route is a POST protected by a global
  * AuthMiddleware that requires (a) a non-empty JSON body and (b) a
- * `metadata` header (any value) — see GHA/src/auth/auth.middleware.ts.
+ * `metadata` header (any value) - see GHA/src/auth/auth.middleware.ts.
  * List/read calls with no real params send a placeholder body, matching the
  * convention already used in the project's Postman collection.
  */
@@ -41,7 +41,7 @@ async function postJson<T>(
   body: Record<string, unknown>
 ): Promise<ApiResult<T>> {
   // `Object.keys` sees keys with `undefined` values (e.g. optional filters a
-  // caller left unset), but `JSON.stringify` silently drops them — so a body
+  // caller left unset), but `JSON.stringify` silently drops them - so a body
   // like `{ pod: undefined, path: undefined }` has keys yet serializes to
   // `{}` on the wire, which AuthMiddleware rejects as empty. Strip
   // `undefined` values first so the emptiness check matches what's actually sent.
@@ -62,7 +62,7 @@ async function postJson<T>(
     return {
       ok: false,
       kind: 'network',
-      message: `Could not reach ${baseUrl} — ${(error as Error).message}. Check the base URL in Settings and that the server is running.`
+      message: `Could not reach ${baseUrl} - ${(error as Error).message}. Check the base URL in Settings and that the server is running.`
     };
   }
 
@@ -70,7 +70,7 @@ async function postJson<T>(
   try {
     data = await res.json();
   } catch {
-    // No/invalid JSON body — leave data as null.
+    // No/invalid JSON body - leave data as null.
   }
 
   if (!res.ok) {
@@ -240,7 +240,7 @@ export function listRewards(
   );
 }
 
-/** Every drop that's ever run (any status), newest first — feeds the Rewards
+/** Every drop that's ever run (any status), newest first - feeds the Rewards
  * page's "pick a drop" dropdown. Optionally scoped to one bouquet. */
 export function listDrops(
   baseUrl: string,

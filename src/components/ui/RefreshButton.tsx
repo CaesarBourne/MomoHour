@@ -6,7 +6,7 @@ import { Button } from './Button';
  * Manual refetch trigger for a page's query/queries. TanStack Query caches
  * aggressively across navigations, so after deploying a backend change (new
  * bouquet config, whitelist update, etc.) the portal can keep showing stale
- * data until something forces a refetch — this button is that explicit
+ * data until something forces a refetch - this button is that explicit
  * escape hatch, without requiring a full page reload.
  */
 export function RefreshButton({

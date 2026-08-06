@@ -97,7 +97,7 @@ export function ServiceForm({
             </option>
             {bouquetOptions.map(b => (
               <option key={b.ext_bouquet_id} value={b.ext_bouquet_id}>
-                {b.ext_bouquet_id} — {b.name}
+                {b.ext_bouquet_id} - {b.name}
               </option>
             ))}
           </Select>
@@ -154,7 +154,7 @@ export function ServiceForm({
       <Field
         label="Dispatch mode"
         htmlFor="dispatchMode"
-        hint="MANUAL never live-dispatches — it only records PENDING_MANUAL for a later bulk fulfilment pass"
+        hint="MANUAL never live-dispatches - it only records PENDING_MANUAL for a later bulk fulfilment pass"
       >
         <Select
           id="dispatchMode"

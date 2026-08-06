@@ -33,13 +33,13 @@ function ScheduleRow({ schedule, today }: { schedule: Schedule; today: string })
     }
   });
 
-  // A past date can never self-activate again regardless of status — the
+  // A past date can never self-activate again regardless of status - the
   // toggle would be a no-op, so don't offer it (avoids an invitation to
   // click something that does nothing).
   const isPast = schedule.campaign_date < today;
   // Today's date but the hour window has already elapsed: re-enabling would
   // be rejected server-side (SCHEDULE_ALREADY_ELAPSED) since it can never
-  // self-activate again — disable just the "Enable" action, not the whole
+  // self-activate again - disable just the "Enable" action, not the whole
   // row, since disabling is still meaningful.
   const nowHHMM = ghanaTimeString();
   const isElapsedToday = schedule.campaign_date === today && schedule.end_hour <= nowHHMM;
@@ -71,14 +71,14 @@ function ScheduleRow({ schedule, today }: { schedule: Schedule; today: string })
       </Td>
       <Td className="text-right">
         {isPast ? (
-          <span className="text-xs text-slate-300 dark:text-slate-600">—</span>
+          <span className="text-xs text-slate-300 dark:text-slate-600">-</span>
         ) : (
           <Button
             size="sm"
             variant={nextStatus === 'INACTIVE' ? 'danger' : 'secondary'}
             loading={mutation.isPending}
             disabled={enableBlocked}
-            title={enableBlocked ? "Today's window has already passed — can't re-enable" : undefined}
+            title={enableBlocked ? "Today's window has already passed - can't re-enable" : undefined}
             onClick={() => mutation.mutate()}
           >
             {nextStatus === 'INACTIVE' ? 'Disable' : 'Enable'}

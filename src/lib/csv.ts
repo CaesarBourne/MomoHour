@@ -7,7 +7,7 @@ export interface CsvColumn<T> {
 
 function csvEscape(value: unknown): string {
   const str = value === null || value === undefined ? '' : String(value);
-  // Quote whenever the field contains a comma, quote, or newline — the three
+  // Quote whenever the field contains a comma, quote, or newline - the three
   // characters that would otherwise break column boundaries or row boundaries.
   if (/[",\n]/.test(str)) {
     return `"${str.replace(/"/g, '""')}"`;
@@ -17,7 +17,7 @@ function csvEscape(value: unknown): string {
 
 /**
  * Builds a CSV from the given rows/columns and triggers a browser download.
- * Client-side only (uses Blob + a synthetic anchor click) — exports exactly
+ * Client-side only (uses Blob + a synthetic anchor click) - exports exactly
  * what's currently on screen, i.e. whatever filters are already applied,
  * since callers pass the already-filtered array.
  */
